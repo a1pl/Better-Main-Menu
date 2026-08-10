@@ -123,7 +123,7 @@ public class BmmScreen extends TScreenPlus {
 		panel.addChild(realms);
 		
 		var credits = new CreditButtonWidget(config.misc.creditXOffset, getHeight() + config.misc.creditYOffset, config.misc.creditWidth, config.misc.creditHeight);
-		credits.setText(Text.literal("Main Menu forked by a1pl, made by Mitzingdash").formatted(Formatting.GREEN));
+		credits.setText(Text.literal("forked by a1pl, made by Mitzingdash").formatted(Formatting.GREEN));
 		credits.setOnClick(__ -> {
 			// change it back if mitzingdash accepts pr
 			GuiUtils.showUrlPrompt("https://github.com/a1pl", true);
