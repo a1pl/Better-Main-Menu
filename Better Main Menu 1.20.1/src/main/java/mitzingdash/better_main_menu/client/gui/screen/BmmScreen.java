@@ -15,6 +15,8 @@ import io.github.thecsdev.tcdcommons.api.util.enumerations.HorizontalAlignment;
 import io.github.thecsdev.tcdcommons.api.util.enumerations.VerticalAlignment;
 import mitzingdash.better_main_menu.client.gui.widget.CreditButtonWidget;
 import mitzingdash.better_main_menu.client.gui.widget.MButtonWidget;
+import mitzingdash.better_main_menu.config.BmmConfig;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerWarningScreen;
@@ -40,27 +42,28 @@ public class BmmScreen extends TScreenPlus {
 	@SuppressWarnings("resource")
 	@Override
 	protected void init() {
+		BmmConfig config = AutoConfig.getConfigHolder(BmmConfig.class).getConfig();
 		
-		var panel = new TFillColorElement(getWidth()-100, 0, 100, getHeight());
-		panel.setColor(0x77000000);
+		var panel = new TFillColorElement(getWidth()-config.panel.panelWidth, 0, config.panel.panelWidth, getHeight());
+		panel.setColor(config.panel.panelColor);
 		addChild(panel);
 		
-		var logo = new TTextureElement(10, 5, 80, 80);
+		var logo = new TTextureElement(config.logo.logoX, config.logo.logoY, config.logo.logoWidth, config.logo.logoHeight);
 		logo.setTexture(new UITexture(new Identifier("better_main_menu", "textures/gui/logo.png")));
 		panel.addChild(logo);
 		
-		var button_panel = new TFillColorElement(0, panel.getHeight()/2-40, panel.getWidth(), 100);
+		var button_panel = new TFillColorElement(0, panel.getHeight()/2 + config.buttons.buttonPanelYOffset, panel.getWidth(), config.buttons.buttonPanelHeight);
 		button_panel.setColor(0x00000000);
 		panel.addChild(button_panel);
 		
-		var singleplayer = new MButtonWidget(5, 5, 90, 20);
+		var singleplayer = new MButtonWidget(5, 5, config.buttons.mainButtonWidth, config.buttons.mainButtonHeight);
 		singleplayer.setText(Text.translatable("menu.singleplayer"));
 		singleplayer.setOnClick(__ -> {
 			getClient().setScreen(new SelectWorldScreen(getAsScreen()));
 		});
 		button_panel.addChild(singleplayer);
 		
-		var multiplayer = new MButtonWidget(5, 27, 90, 20);
+		var multiplayer = new MButtonWidget(5, 27, config.buttons.mainButtonWidth, config.buttons.mainButtonHeight);
 		multiplayer.setText(Text.translatable("menu.multiplayer"));
 		multiplayer.setOnClick(__ -> {
 			final boolean smw = getClient().options.skipMultiplayerWarning;
@@ -69,7 +72,7 @@ public class BmmScreen extends TScreenPlus {
 		});
 		button_panel.addChild(multiplayer);
 		
-		var options = new MButtonWidget(5, 49, 90, 20);
+		var options = new MButtonWidget(5, 49, config.buttons.mainButtonWidth, config.buttons.mainButtonHeight);
 		options.setText(Text.translatable("menu.options"));
 		options.setOnClick(__ -> {
 			getClient().setScreen(new OptionsScreen(getAsScreen(), getClient().options));
@@ -77,7 +80,7 @@ public class BmmScreen extends TScreenPlus {
 		button_panel.addChild(options);
 		
 		if(FabricLoader.getInstance().isModLoaded("modmenu")) {
-			var mod_btn = new MButtonWidget(0, 0, 90, 20);
+			var mod_btn = new MButtonWidget(0, 0, config.buttons.mainButtonWidth, config.buttons.mainButtonHeight);
 			mod_btn.setText(Text.translatable("modmenu.title"));
 			mod_btn.setOnClick(__ -> {
 				getClient().setScreen(ModMenuApi.createModsScreen(getAsScreen()));
@@ -85,9 +88,9 @@ public class BmmScreen extends TScreenPlus {
 			button_panel.addChild(mod_btn);
 		}
 		
-		new UIListLayout(Axis2D.Y, VerticalAlignment.CENTER, HorizontalAlignment.CENTER, 2).apply(button_panel);
+		new UIListLayout(Axis2D.Y, VerticalAlignment.CENTER, HorizontalAlignment.CENTER, config.buttons.mainButtonMargin).apply(button_panel);
 		
-		var btn_quit = new MButtonWidget(panel.getWidth()-50, panel.getHeight()-25, 45, 20);
+		var btn_quit = new MButtonWidget(panel.getWidth() + config.misc.quitButtonXOffset, panel.getHeight() + config.misc.quitButtonYOffset, config.misc.quitButtonWidth, config.misc.quitButtonHeight);
 		btn_quit.setText(Text.literal("Quit"));
 		btn_quit.setTooltip(Tooltip.of(Text.translatable("menu.quit")));
 		btn_quit.setOnClick(__ -> {
@@ -95,7 +98,7 @@ public class BmmScreen extends TScreenPlus {
 		});
 		panel.addChild(btn_quit);
 		
-		var accesibility = new MButtonWidget(panel.getWidth()-73, panel.getHeight()-25, 20, 20);
+		var accesibility = new MButtonWidget(panel.getWidth() + config.misc.accessibilityButtonXOffset, panel.getHeight() + config.misc.accessibilityButtonYOffset, config.misc.accessibilityButtonWidth, config.misc.accessibilityButtonHeight);
 		accesibility.setIcon(new UITexture(new Identifier("better_main_menu", "textures/gui/accessibility.png")));
 		accesibility.setTooltip(Tooltip.of(Text.translatable("narrator.button.accessibility")));
 		accesibility.setOnClick(__ -> {
@@ -103,7 +106,7 @@ public class BmmScreen extends TScreenPlus {
 		});
 		panel.addChild(accesibility);
 		
-		var language = new MButtonWidget(5, panel.getHeight()-25, 20, 20);
+		var language = new MButtonWidget(config.misc.languageButtonXOffset, panel.getHeight() + config.misc.languageButtonYOffset, config.misc.languageButtonWidth, config.misc.languageButtonHeight);
 		language.setIcon(new UITexture(new Identifier("better_main_menu", "textures/gui/language.png")));
 		language.setTooltip(Tooltip.of(Text.translatable("narrator.button.language")));
 		language.setOnClick(__ -> {
@@ -111,7 +114,7 @@ public class BmmScreen extends TScreenPlus {
 		});
 		panel.addChild(language);
 		
-		var realms = new MButtonWidget(panel.getWidth()-50, panel.getHeight()-48, 45, 20);
+		var realms = new MButtonWidget(panel.getWidth() + config.misc.realmsButtonXOffset, panel.getHeight() + config.misc.realmsButtonYOffset, config.misc.realmsButtonWidth, config.misc.realmsButtonHeight);
 		realms.setText(Text.literal("Realms"));
 		realms.setTooltip(Tooltip.of(Text.translatable("menu.online")));
 		realms.setOnClick(__ -> {
@@ -119,21 +122,23 @@ public class BmmScreen extends TScreenPlus {
 		});
 		panel.addChild(realms);
 		
-		var credits = new CreditButtonWidget(5, getHeight()-12, 152, 10);
-		credits.setText(Text.literal("Main Menu made by Mitzingdash").formatted(Formatting.GREEN));
+		var credits = new CreditButtonWidget(config.misc.creditXOffset, getHeight() + config.misc.creditYOffset, config.misc.creditWidth, config.misc.creditHeight);
+		credits.setText(Text.literal("Main Menu forked by a1pl, made by Mitzingdash").formatted(Formatting.GREEN));
 		credits.setOnClick(__ -> {
-			GuiUtils.showUrlPrompt("https://github.com/Mitzingdash", true);
+			// change it back if mitzingdash accepts pr
+			GuiUtils.showUrlPrompt("https://github.com/a1pl", true);
 		});
 		addChild(credits);
 		
-		var txt_social = new TLabelElement(5, getHeight()-20, 50, 5, Text.literal("Not affiliated with MOJANG").formatted(Formatting.GOLD));
+		var txt_social = new TLabelElement(config.misc.socialXOffset, getHeight() + config.misc.socialYOffset, config.misc.socialWidth, config.misc.socialHeight, Text.literal("Not affiliated with MOJANG").formatted(Formatting.GOLD));
 		addChild(txt_social);
 		
 		var settings = new MButtonWidget(5, getHeight()-45, 20, 20);
 		settings.setIcon(new UITexture(new Identifier("better_main_menu", "textures/gui/settings.png")));
 		settings.setTooltip(Tooltip.of(Text.literal("Bmm Settings")));
 		settings.setOnClick(__ -> {
-			GuiUtils.showUrlPrompt("https://github.com/Mitzingdash", true);
+			// change it back if mitzingdash accepts pr
+			GuiUtils.showUrlPrompt("https://github.com/a1pl", true);
 		});
 		//addChild(settings);
 		

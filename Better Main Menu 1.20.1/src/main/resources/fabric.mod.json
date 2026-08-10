@@ -25,6 +25,9 @@
     ],
     "main": [
       "mitzingdash.better_main_menu.BetterMainMenu"
+    ],
+    "modmenu": [
+      "mitzingdash.better_main_menu.compat.ModMenuIntegration"
     ]
   },
   "mixins": [
@@ -33,6 +36,7 @@
   "depends": {
     "fabricloader": "*",
     "fabric": "*",
-    "minecraft": "${project.minecraft_version}"
+    "minecraft": "${project.minecraft_version}",
+    "cloth-config": "*"
   }
 }

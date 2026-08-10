@@ -18,7 +18,8 @@ public abstract class MixinMinecraftClient {
 	private void onSetScreen(@Nullable Screen screen, CallbackInfo ci) {
 		
 		if(screen instanceof TitleScreen){
-			System.out.println("womb womb");
+			//System.out.println("womb womb"); - yo what is this twin :sob:
+			System.err.println("setting main menu to Better Main Menu screen");
 			MinecraftClient.getInstance().setScreen(new BmmScreen().getAsScreen());
 			ci.cancel();
 			return;
